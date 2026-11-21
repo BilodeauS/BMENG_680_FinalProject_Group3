@@ -1,0 +1,4 @@
+model,MAE (incidents per block),vs block x dow baseline %
+Baseline: block average,2.397,-9.0
+Baseline: block x day-of-week avg,2.199,0.0
+Poisson regression,2.181,0.8
