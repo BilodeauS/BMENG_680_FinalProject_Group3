@@ -1,0 +1,7 @@
+rule,model,TP,FN,FP,TN,accuracy,precision,recall
+A: predicted >= 25,Day-of-week baseline,0,209,0,436,0.676,0.0,0.0
+A: predicted >= 25,Poisson regression,66,143,47,389,0.705,0.584,0.316
+A: predicted >= 25,Random forest,70,139,55,381,0.699,0.56,0.335
+B: top 25% of days by prediction,Day-of-week baseline,78,131,84,352,0.667,0.481,0.373
+B: top 25% of days by prediction,Poisson regression,87,122,75,361,0.695,0.537,0.416
+B: top 25% of days by prediction,Random forest,85,124,77,359,0.688,0.525,0.407
