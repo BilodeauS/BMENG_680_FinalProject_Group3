@@ -7,7 +7,7 @@ from sklearn.linear_model import PoissonRegressor
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_absolute_error
 
-df = pd.read_csv("Traffic_Incidents_cleaned.csv", parse_dates=["DATE_LOCAL"])
+df = pd.read_csv("Cleaning/Traffic_Incidents_cleaned.csv", parse_dates=["DATE_LOCAL"])
 d = df.groupby("DATE_LOCAL").size()
 d = d.reindex(pd.date_range(d.index.min(), d.index.max()), fill_value=0).rename("count").to_frame()
 
@@ -51,5 +51,5 @@ for k, p in res.items():
 out = pd.DataFrame(rows, columns=["model","MAE","RMSE"]).round(2)
 base = out.MAE.iloc[0]; out["MAE_vs_dow_baseline_%"] = ((base-out.MAE)/base*100).round(1)
 print(out.to_string(index=False))
-pd.DataFrame({"actual": test["count"], **{k: np.asarray(v) for k, v in res.items()}}).to_csv("daily_test_predictions.csv")
-d.to_csv("daily_counts_model_table.csv")
+pd.DataFrame({"actual": test["count"], **{k: np.asarray(v) for k, v in res.items()}}).to_csv("Forecasting/daily_test_predictions.csv")
+d.to_csv("Forecasting/daily_counts_model_table.csv")
