@@ -7,7 +7,7 @@ from sklearn.metrics import mean_absolute_error
 from sklearn.cluster import DBSCAN
 import matplotlib; matplotlib.use("Agg"); import matplotlib.pyplot as plt
 
-df = pd.read_csv("Traffic_Incidents_cleaned.csv", parse_dates=["DATE_LOCAL"])
+df = pd.read_csv("Cleaning/Traffic_Incidents_cleaned.csv", parse_dates=["DATE_LOCAL"])
 bad_ranges = [("2025-05-21","2025-07-01")]; bad_days = ["2026-09-17","2025-01-20"]
 bad = pd.Series(False, index=df.index)
 for a,b in bad_ranges: bad |= (df.DATE_LOCAL>=a)&(df.DATE_LOCAL<=b)
@@ -35,7 +35,7 @@ fig,ax=plt.subplots(figsize=(8,4.5))
 for we,c,l in [(False,"tab:blue","Weekday"),(True,"tab:orange","Weekend")]:
     ax.plot(P[("train",we)].index,P[("train",we)].values,c=c,label=f"{l} 2022-24"); ax.plot(P[("test",we)].index,P[("test",we)].values,c=c,ls="--",label=f"{l} 2025-26")
 ax.set_xlabel("Hour of day (Calgary local time)"); ax.set_ylabel("Incidents per hour per day"); ax.set_xticks(range(0,24,3)); ax.legend(); ax.set_title("Incidents by hour: weekday vs weekend")
-plt.tight_layout(); plt.savefig("hourly_profile.png",dpi=110)
+plt.tight_layout(); plt.savefig("Validations/hourly_profile.png",dpi=110)
 
 # ---- 2. forecast incidents per day x block
 def table(x):
@@ -68,7 +68,7 @@ print("\nforecast of incidents per day x shift block (test 2025-26)"); print(res
 per = pd.DataFrame({"block":Tte.block,"actual":Tte["count"],"base":pred["Baseline: block x day-of-week avg"],"poisson":pred["Poisson regression"]})
 pb = per.groupby("block").apply(lambda g: pd.Series({"mean_actual":g.actual.mean(),"MAE_base":mean_absolute_error(g.actual,g.base),"MAE_poisson":mean_absolute_error(g.actual,g.poisson)})).reindex([b[2] for b in BLOCKS])
 print("\nper block:"); print(pb.round(2).to_string())
-pb.round(3).to_csv("time_block_forecast_by_block.csv"); res.round(3).to_csv("time_block_forecast_summary.csv",index=False)
+pb.round(3).to_csv("Validations/time_block_forecast_by_block.csv"); res.round(3).to_csv("Validations/time_block_forecast_summary.csv",index=False)
 
 # ---- 3. hot spots by time block (train period), eps 150 m, min 30 incidents
 R=6371000; print("\nhot spots by block, 2022-2024 (eps 150 m, min_samples 30)")
@@ -79,4 +79,4 @@ for a,b,n in BLOCKS:
     g = x.assign(c=lab)[lab>=0].groupby("c").agg(n=("c","size"),loc=("INCIDENT INFO",lambda s:s.str.replace(r"^(Northbound|Southbound|Eastbound|Westbound)\s+","",regex=True).mode().iat[0])).sort_values("n",ascending=False)
     print(f"{n:15s} {len(x):6d} incidents, {len(g):2d} hot spots ({(lab>=0).mean():.0%} of block's incidents); top 3: " + "; ".join(g['loc'].head(3)))
     for i,(c,r) in enumerate(g.head(5).iterrows(),1): out.append((n,i,r["loc"],r["n"]))
-pd.DataFrame(out,columns=["block","rank","location","incidents_2022_24"]).to_csv("hotspots_by_time_block.csv",index=False)
+pd.DataFrame(out,columns=["block","rank","location","incidents_2022_24"]).to_csv("Validations/hotspots_by_time_block.csv",index=False)

@@ -11,12 +11,12 @@ have = {f.name for f in fm.fontManager.ttflist}
 plt.rcParams["font.family"] = next(f for f in ["Times New Roman", "Liberation Serif", "DejaVu Serif"] if f in have)
 
 # ---------- numbers ----------
-p = pd.read_csv("daily_test_predictions.csv", index_col=0, parse_dates=True)
+p = pd.read_csv("Forecasting/daily_test_predictions.csv", index_col=0, parse_dates=True)
 mean = p.actual.mean()
 cols = {"b1": "Baseline: day-of-week average", "b2": "Baseline: day-of-week x month average",
         "poi": "Poisson regression", "rf": "Random forest"}
 mae = {k: (p.actual - p[c]).abs().mean() for k, c in cols.items()}
-tb = pd.read_csv("time_block_forecast_summary.csv").set_index("model")["MAE (incidents per block)"]
+tb = pd.read_csv("Validations/time_block_forecast_summary.csv").set_index("model")["MAE (incidents per block)"]
 blk_base, blk_poi = tb["Baseline: block x day-of-week avg"], tb["Poisson regression"]
 n_test = len(p)
 # from validate_hotspots.py output
@@ -149,5 +149,5 @@ for r in (R1, R2, R3):
     arrow((BUS_TEST, mid(r)), (EX + EW, mid(r)), color=AMB_E, lw=1.4, ls=(0, (4, 2)))
 txt(4.3, 0.42, "held-out test data: used only to measure accuracy, never to fit a model", 7.5, color=AMB_T, style="italic")
 
-fig.savefig("workflow_figure.png", dpi=220)
+fig.savefig("Methodology/workflow_figure.png", dpi=220)
 print("saved", f"{mean:.2f}", {k: round(v, 2) for k, v in mae.items()})

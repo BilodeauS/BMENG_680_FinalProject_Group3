@@ -5,7 +5,7 @@ from sklearn.neighbors import BallTree
 from scipy.stats import spearmanr
 
 R = 6371000
-df = pd.read_csv("Traffic_Incidents_cleaned.csv", parse_dates=["DATE_LOCAL"])
+df = pd.read_csv("Cleaning/Traffic_Incidents_cleaned.csv", parse_dates=["DATE_LOCAL"])
 gap = (df.DATE_LOCAL >= "2025-05-21") & (df.DATE_LOCAL <= "2025-07-01")   # recording outage
 df = df[~gap & (df.YEAR >= 2022)].copy()
 tr = df[df.YEAR <= 2024].reset_index(drop=True); te = df[df.YEAR >= 2025].reset_index(drop=True)
@@ -83,4 +83,4 @@ for eps in [100,150,250]:
         rows.append((eps, mn, len(c), (l>=0).mean(), within(te[["Latitude","Longitude"]].values, cp, eps).mean(), top_match(cen, c) ))
 s = pd.DataFrame(rows, columns=["eps_m","min_samples","n_hotspots","train_share","test_share","top10_overlap_default"])
 print(s.round(3).to_string(index=False))
-cmp.round(2).to_csv("hotspots_validation.csv"); s.round(3).to_csv("hotspots_sensitivity.csv", index=False)
+cmp.round(2).to_csv("Validations/hotspots_validation.csv"); s.round(3).to_csv("Validations/hotspots_sensitivity.csv", index=False)
