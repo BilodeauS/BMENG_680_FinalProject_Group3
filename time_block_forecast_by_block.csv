@@ -1,0 +1,6 @@
+block,mean_actual,MAE_base,MAE_poisson
+Night 00-06,1.637,1.316,1.326
+AM rush 06-10,4.65,2.48,2.395
+Midday 10-15,5.578,2.533,2.51
+PM rush 15-19,6.771,2.795,2.786
+Evening 19-24,3.423,1.874,1.888
